@@ -1,0 +1,8 @@
+---
+
+- name: LIBGEOS | Install
+  include: install.yml
+  environment:
+    CXX: "{{ libgeos_cmake_environment }}"
+  tags:
+    - libgeos_install

@@ -1,0 +1,5 @@
+---
+command:
+  "ldconfig -v | grep libgeos-3.6.1":
+    exit-status: 0
+    stderr: []

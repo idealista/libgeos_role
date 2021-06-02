@@ -1,0 +1,76 @@
+---
+
+- name: LIBGEOS | Ensure skeleton paths
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ libgeos_skeleton_paths }}"
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Check libgeos version
+  shell: "ldconfig -v | grep libgeos-{{ libgeos_version }}"
+  register: libgeos_check
+  changed_when: false
+  ignore_errors: true
+  check_mode: no
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Download package
+  get_url:
+    url: "{{ libgeos_url }}"
+    dest: "{{ libgeos_package_path }}"
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version not in libgeos_check.stdout
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Uncompress downloaded package
+  command:
+    cmd: "bzip2 -df {{ libgeos_package_path }}"
+    chdir: "{{ libgeos_download_path }}"
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version not in libgeos_check.stdout
+  check_mode: no
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Extract downloaded package
+  unarchive:
+    src: "{{ libgeos_download_path }}/{{ libgeos_tar_package }}"
+    dest: "{{ libgeos_download_path }}"
+    remote_src: True
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version  not in libgeos_check.stdout
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Configure library build
+  command:
+    cmd: "./configure {{ libgeos_configure_flags }}"
+    chdir: "{{ libgeos_download_path }}/{{ libgeos_release_name }}"
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version not in libgeos_check.stdout
+  check_mode: no
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Run make
+  command:
+    cmd: "make"
+    chdir: "{{ libgeos_download_path }}/{{ libgeos_release_name }}"
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version not in libgeos_check.stdout
+  changed_when: false
+  check_mode: no
+  notify: ldconfig
+  tags:
+    - libgeos_install
+
+- name: LIBGEOS | Run make install
+  command:
+    cmd: "make install"
+    chdir: "{{ libgeos_download_path }}/{{ libgeos_release_name }}"
+  when: libgeos_force_reinstall or libgeos_check is failed or libgeos_version not in libgeos_check.stdout
+  changed_when: false
+  check_mode: no
+  notify: ldconfig
+  tags:
+    - libgeos_install

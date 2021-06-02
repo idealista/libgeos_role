@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: libgeos_group
+  roles:
+    - role: libgeos_role

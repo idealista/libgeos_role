@@ -1,0 +1,15 @@
+---
+
+galaxy_info:
+  author: idealista
+  company: Idealista S.A.U.
+  description: Libgeos Role
+  min_ansible_version: 4.0.0
+  license: Apache 2.0
+  galaxy-tags:
+    - libgeos
+    - geos
+  platforms:
+    - name: Debian
+      versions:
+        - buster

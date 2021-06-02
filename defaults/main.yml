@@ -1,0 +1,24 @@
+---
+
+## General
+# Version
+libgeos_version: 3.6.1
+
+# Package URL
+libgeos_release_name: "geos-{{ libgeos_version }}"
+libgeos_tar_package: "{{ libgeos_release_name }}.tar"
+libgeos_package: "{{ libgeos_tar_package }}.bz2"
+libgeos_url: "https://download.osgeo.org/geos/{{ libgeos_package }}"
+
+# Package paths
+libgeos_download_path: "/usr/src/libgeos/{{ libgeos_release_name }}"
+libgeos_package_path: "{{ libgeos_download_path }}/{{ libgeos_package }}"
+
+# Set true to force the download and installation of the binary
+libgeos_force_reinstall: false
+
+libgeos_skeleton_paths:
+  - "{{ libgeos_download_path }}"
+
+libgeos_cmake_environment: "g++ -std=c++98"
+libgeos_configure_flags: ""  # --enable-php
